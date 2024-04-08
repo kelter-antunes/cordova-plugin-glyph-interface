@@ -307,7 +307,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             GlyphFrame.Builder builder = builderMap.get(id);
             if (builder != null) {
                 builderMap.put(id, builder.buildCycles(cycles));
-                callbackContext.success(true);
+                callbackContext.success();
             } else {
                 throw new Exception("Builder not found for ID: " + id);
             }
@@ -323,7 +323,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             GlyphFrame.Builder builder = builderMap.get(id);
             if (builder != null) {
                 builderMap.put(id, builder.buildInterval(interval));
-                callbackContext.success(true);
+                callbackContext.success();
             } else {
                 throw new Exception("Builder not found for ID: " + id);
             }
