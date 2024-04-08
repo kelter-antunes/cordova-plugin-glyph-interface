@@ -32,13 +32,13 @@
 
         <!-- Add the plugin to the config.xml -->
         <config-file parent="/*" target="res/xml/config.xml">
-            <feature name="GlyphInterface">
-                <param name="android-package" value="com.kelter.glyphinterface.GlyphInterface" />
+            <feature name="GlyphInterfacePlugin">
+                <param name="android-package" value="com.kelter.glyphinterface.GlyphInterfacePlugin" />
             </feature>
         </config-file>
 
         <!-- Specify the source file for the plugin -->
-        <source-file src="src/android/GlyphInterface.java" target-dir="src/com/kelter/glyphinterface" />
+        <source-file src="src/android/GlyphInterfacePlugin.java" target-dir="src/com/kelter/glyphinterface" />
 
         <!-- Add dependency on Glyph SDK -->
         <lib-file src="src/android/libs/KetchumSDK_Community_20240307.jar"/>

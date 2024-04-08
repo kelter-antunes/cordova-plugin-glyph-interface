@@ -18,7 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GlyphPlugin extends CordovaPlugin {
+public class GlyphInterfacePlugin extends CordovaPlugin {
 
     private GlyphManager mGM = null;
     private GlyphManager.Callback mCallback = null;
