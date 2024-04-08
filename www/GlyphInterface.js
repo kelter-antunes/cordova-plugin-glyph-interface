@@ -4,6 +4,9 @@ var GlyphInterface = {
     builder: function(options, success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'builder', [options]);
     },
+    turnOff: function(options, success, error) {
+        exec(success, error, 'GlyphInterfacePlugin', 'turnOff', []);
+    },
     getPlatform: function(success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'getPlatform', []);
     },

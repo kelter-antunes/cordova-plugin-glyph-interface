@@ -84,6 +84,9 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             case "builder":
                 buildGlyphFrame(args, callbackContext);
                 return true;
+            case "turnOff":
+                turnOffAllGlyphs(callbackContext);
+                return true;
             case "getPlatform":
                 getPlatform(callbackContext);
                 return true;
@@ -189,6 +192,22 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error building GlyphFrame: " + e.getMessage());
         }
     }
+
+    private void turnOffAllGlyphs(CallbackContext callbackContext) {
+        try {
+
+            mGM.turnOff();
+
+            // Convert the JSON object to string and return it
+            callbackContext.success();
+
+        } catch (JSONException e) {
+            callbackContext.error("Error processing arguments");
+        } catch (Exception e) {
+            callbackContext.error("Error building GlyphFrame: " + e.getMessage());
+        }
+    }
+
 
 
     private void getPlatform(CallbackContext callbackContext) {
@@ -366,5 +385,6 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error clearing frames: " + e.getMessage());
         }
     }
+
     
 }
