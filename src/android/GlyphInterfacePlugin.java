@@ -2,6 +2,9 @@ package com.kelter.glyphinterface;
 
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
+
+import java.util.UUID;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaWebView;
 
@@ -73,13 +76,13 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         switch (action) {
             case "builder":
-                // Implement builder logic here
+                buildGlyphFrame(args, callbackContext);
                 return true;
             case "getPlatform":
-                // Implement getPlatform logic here
+                getPlatform(callbackContext);
                 return true;
             case "channel":
-                // Implement channel logic here
+                setChannel(args, callbackContext);
                 return true;
             case "build":
                 // Implement build logic here
@@ -118,6 +121,85 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 Log.e("GlyphIntegrationCordova", "Error closing Glyph session: " + e.getMessage());
             }
             mGM.unInit();
+        }
+    }
+
+
+    private void buildGlyphFrame(JSONArray args, CallbackContext callbackContext) {
+        try {
+            JSONObject options = args.getJSONObject(0);
+            String builderId = options.optString("builderId"); // Use optString to handle null values
+            if (builderId == null || builderId.isEmpty()) {
+                builderId = UUID.randomUUID().toString(); // Generate a new unique ID if none provided
+            }
+            int period = options.optInt("period", -1); // Use default value if not provided
+            int cycles = options.optInt("cycles", -1);
+            int interval = options.optInt("interval", -1);
+            int channel = options.optInt("channel", -1); // Adjust according to how channels are identified
+
+            // Check if a builder for this ID already exists, otherwise create a new one
+            GlyphFrame.Builder builder = builderMap.get(builderId);
+            if (builder == null) {
+                builder = mGM.getGlyphFrameBuilder(); // Initialize a new Builder if not found
+                // Assuming the builder allows setting these values directly
+                builderMap.put(builderId, builder); // Store the new builder with the generated/found ID
+            }
+
+            // Configure the builder based on the parameters. This part might need adjustment
+            // based on your actual builder methods and capabilities
+            builder.buildPeriod(period)
+                .buildCycles(cycles)
+                .buildInterval(interval)
+                .buildChannel(channel); // Adjust this part based on actual implementation
+
+            // Construct the JSON object to return
+            JSONObject builderDetails = new JSONObject();
+            builderDetails.put("builderId", builderId);
+            builderDetails.put("period", period);
+            builderDetails.put("cycles", cycles);
+            builderDetails.put("interval", interval);
+            builderDetails.put("channel", channel);
+
+            // Convert the JSON object to string and return it
+            callbackContext.success(builderDetails.toString());
+
+        } catch (JSONException e) {
+            callbackContext.error("Error processing arguments");
+        } catch (Exception e) {
+            callbackContext.error("Error building GlyphFrame: " + e.getMessage());
+        }
+    }
+
+
+    private void getPlatform(CallbackContext callbackContext) {
+        if (Common.is20111()) {
+            callbackContext.success("20111");
+        } else if (Common.is22111()) {
+            callbackContext.success("22111");
+        } else {
+            callbackContext.success("23111"); // Assuming 23111 is the default or fallback version
+        }
+    }
+
+    private void setChannel(JSONArray args, CallbackContext callbackContext) {
+        try {
+            JSONObject options = args.getJSONObject(0);
+            String id = options.getString("id");
+            int channel = options.getInt("channel");
+            if (!builderMap.containsKey(id)) {
+                callbackContext.error("Builder with ID not found");
+                return;
+            }
+            // Check if lightValue is provided
+            if (options.has("light")) {
+                int lightValue = options.getInt("light");
+                builderMap.get(id).buildChannel(channel, lightValue);
+            } else {
+                builderMap.get(id).buildChannel(channel);
+            }
+            callbackContext.success("Channel set successfully");
+        } catch (JSONException e) {
+            callbackContext.error("Error processing channel operation");
         }
     }
     

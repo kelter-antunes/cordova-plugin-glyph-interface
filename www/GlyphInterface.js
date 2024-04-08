@@ -1,36 +1,41 @@
 var exec = require('cordova/exec');
 
 var GlyphInterface = {
-    builder: function(success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'builder', []);
+    builder: function(options, success, error) {
+        // Adjusted to accept an options object
+        exec(success, error, 'GlyphInterfacePlugin', 'builder', [options]);
     },
     getPlatform: function(success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'getPlatform', []);
     },
-    channel: function(id, channel, lightValue, success, error) {
-        var args = [id, channel];
-        if(lightValue !== undefined) {
-            args.push(lightValue);
-        }
-        exec(success, error, 'GlyphInterfacePlugin', 'channel', args);
+    channel: function(options, success, error) {
+        // Adjusted to accept an options object
+        exec(success, error, 'GlyphInterfacePlugin', 'channel', [options]);
     },
-    build: function(id, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'build', [id]);
+    // The following methods seem to require adjustments for accepting parameters
+    build: function(options, success, error) {
+        // Adjusted to accept an options object
+        exec(success, error, 'GlyphInterfacePlugin', 'build', [options]);
     },
-    toggle: function(id, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'toggle', [id]);
+    toggle: function(options, success, error) {
+        // Adjusted to accept an options object
+        exec(success, error, 'GlyphInterfacePlugin', 'toggle', [options]);
     },
-    setPeriod: function(id, period, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'setPeriod', [id, period]);
+    setPeriod: function(options, success, error) {
+        // Adjusted to accept an options object
+        exec(success, error, 'GlyphInterfacePlugin', 'setPeriod', [options]);
     },
-    setCycles: function(id, cycles, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'setCycles', [id, cycles]);
+    setCycles: function(options, success, error) {
+        // Adjusted to accept an options object
+        exec(success, error, 'GlyphInterfacePlugin', 'setCycles', [options]);
     },
-    setInterval: function(id, interval, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'setInterval', [id, interval]);
+    setInterval: function(options, success, error) {
+        // Adjusted to accept an options object
+        exec(success, error, 'GlyphInterfacePlugin', 'setInterval', [options]);
     },
-    animate: function(id, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'animate', [id]);
+    animate: function(options, success, error) {
+        // Adjusted to accept an options object
+        exec(success, error, 'GlyphInterfacePlugin', 'animate', [options]);
     },
     getPlatformVersion: function(success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'getPlatformVersion', []);
