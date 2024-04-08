@@ -39,6 +39,12 @@ var GlyphInterface = {
     },
     getPlatformVersion: function(success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'getPlatformVersion', []);
+    },
+    listBuilderIds: function(success, error) {
+        exec(success, error, 'GlyphInterfacePlugin', 'listBuilderIds', []);
+    },
+    clearBuilders: function(success, error) {
+        exec(success, error, 'GlyphInterfacePlugin', 'clearBuilders', []);
     }
 };
 

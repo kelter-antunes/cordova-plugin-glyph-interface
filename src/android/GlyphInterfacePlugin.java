@@ -110,6 +110,12 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             case "getPlatformVersion":
                 callbackContext.success("Android " + android.os.Build.VERSION.RELEASE);
                 return true;
+            case "listBuilderIds":
+                listBuilderIds(callbackContext);
+                return true;
+            case "clearBuilders":
+                clearBuilders(callbackContext);
+                return true;
             default:
                 callbackContext.error("Method not found");
                 return false;
@@ -207,6 +213,26 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.success("Channel set successfully");
         } catch (JSONException e) {
             callbackContext.error("Error processing channel operation");
+        }
+    }
+
+    // Method to list existing builder IDs
+    private void listBuilderIds(CallbackContext callbackContext) {
+        try {
+            JSONArray ids = new JSONArray(builderMap.keySet()); // Convert the keySet to JSONArray
+            callbackContext.success(ids);
+        } catch (Exception e) {
+            callbackContext.error("Error listing builder IDs: " + e.getMessage());
+        }
+    }
+
+    // Method to clear all entries in builderMap
+    private void clearBuilders(CallbackContext callbackContext) {
+        try {
+            builderMap.clear(); // Clear the map
+            callbackContext.success("All builders cleared.");
+        } catch (Exception e) {
+            callbackContext.error("Error clearing builders: " + e.getMessage());
         }
     }
     
