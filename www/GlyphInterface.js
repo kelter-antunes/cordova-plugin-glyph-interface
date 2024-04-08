@@ -36,6 +36,12 @@ var GlyphInterface = {
     },
     clearBuilders: function(success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'clearBuilders', []);
+    },
+    listFrameIds: function(success, error) {
+        exec(success, error, 'GlyphInterfacePlugin', 'listFrameIds', []);
+    },
+    clearFrames: function(success, error) {
+        exec(success, error, 'GlyphInterfacePlugin', 'clearFrames', []);
     }
 };
 

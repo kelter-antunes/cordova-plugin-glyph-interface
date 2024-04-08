@@ -117,6 +117,12 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             case "clearBuilders":
                 clearBuilders(callbackContext);
                 return true;
+            case "listFrameIds":
+                listFrameIds(callbackContext);
+                return true;
+            case "clearFrames":
+                clearFrames(callbackContext);
+                return true;
             default:
                 callbackContext.error("Method not found");
                 return false;
@@ -337,6 +343,26 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             }
         } catch (Exception e) {
             callbackContext.error("Error animating frame: " + e.getMessage());
+        }
+    }
+
+
+    private void listFrameIds(CallbackContext callbackContext) {
+        try {
+            JSONArray ids = new JSONArray(frameMap.keySet()); // Convert the keySet to JSONArray
+            callbackContext.success(ids);
+        } catch (Exception e) {
+            callbackContext.error("Error listing frame IDs: " + e.getMessage());
+        }
+    }
+    
+    // Method to clear all entries in frameMap
+    private void clearFrames(CallbackContext callbackContext) {
+        try {
+            frameMap.clear(); // Clear the map
+            callbackContext.success("All frames cleared.");
+        } catch (Exception e) {
+            callbackContext.error("Error clearing frames: " + e.getMessage());
         }
     }
     
