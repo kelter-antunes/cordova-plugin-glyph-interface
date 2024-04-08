@@ -56,8 +56,13 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
 
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
-                mGM.closeSession();
+                try {
+                    mGM.closeSession();
+                } catch (GlyphException e) {
+                    Log.e("GlyphIntegrationCordova", "Error closing Glyph session: " + e.getMessage());
+                }
             }
+            
         };
 
         mGM = GlyphManager.getInstance(context);
