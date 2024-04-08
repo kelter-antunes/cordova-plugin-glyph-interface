@@ -201,8 +201,6 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             // Convert the JSON object to string and return it
             callbackContext.success();
 
-        } catch (JSONException e) {
-            callbackContext.error("Error processing arguments");
         } catch (Exception e) {
             callbackContext.error("Error building GlyphFrame: " + e.getMessage());
         }
