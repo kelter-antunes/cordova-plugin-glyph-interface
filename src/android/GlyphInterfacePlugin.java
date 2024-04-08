@@ -3,6 +3,8 @@ package com.kelter.glyphinterface;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.cordova.CallbackContext;
@@ -26,6 +28,9 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
     private GlyphManager mGM = null;
     private GlyphManager.Callback mCallback = null;
     private Context context;
+
+    // Declare the builderMap
+    private Map<String, GlyphFrame.Builder> builderMap = new HashMap<>();
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -122,6 +127,8 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             }
             mGM.unInit();
         }
+        // Clear the builderMap
+        builderMap.clear();
     }
 
 
