@@ -106,11 +106,14 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
-            mGM.closeSession();
-        } catch (GlyphException e) {
-            Log.d("GlyphIntegrationCordova", e.getMessage());
+        if (mGM != null) {
+            try {
+                mGM.closeSession();
+            } catch (GlyphException e) {
+                Log.e("GlyphIntegrationCordova", "Error closing Glyph session: " + e.getMessage());
+            }
+            mGM.unInit();
         }
-        mGM.unInit();
     }
+    
 }
