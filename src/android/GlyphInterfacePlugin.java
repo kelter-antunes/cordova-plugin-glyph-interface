@@ -29,8 +29,9 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
     private GlyphManager.Callback mCallback = null;
     private Context context;
 
-    // Declare the builderMap
+
     private Map<String, GlyphFrame.Builder> builderMap = new HashMap<>();
+    private Map<String, GlyphFrame> frameMap = new HashMap<>();
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -90,22 +91,22 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 setChannel(args, callbackContext);
                 return true;
             case "build":
-                // Implement build logic here
+                buildFrame(args, callbackContext);
                 return true;
             case "toggle":
-                // Implement toggle logic here
+                toggleFrame(args, callbackContext);
                 return true;
             case "setPeriod":
-                // Implement setPeriod logic here
+                setPeriod(args, callbackContext);
                 return true;
             case "setCycles":
-                // Implement setCycles logic here
+                setCycles(args, callbackContext);
                 return true;
             case "setInterval":
-                // Implement setInterval logic here
+                setInterval(args, callbackContext);
                 return true;
             case "animate":
-                // Implement animate logic here
+                animate(args, callbackContext);
                 return true;
             case "getPlatformVersion":
                 callbackContext.success("Android " + android.os.Build.VERSION.RELEASE);
@@ -233,6 +234,109 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.success("All builders cleared.");
         } catch (Exception e) {
             callbackContext.error("Error clearing builders: " + e.getMessage());
+        }
+    }
+
+
+    private void buildFrame(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String id = args.optString(0);
+            if (id.isEmpty()) {
+                callbackContext.error("ID is required for building a frame.");
+                return;
+            }
+            if (!builderMap.containsKey(id)) {
+                callbackContext.error("Builder ID not found: " + id);
+                return;
+            }
+            GlyphFrame frame = builderMap.get(id).build(); // Assuming build() can't return null
+            frameMap.put(id, frame);
+            callbackContext.success("Frame built successfully for ID: " + id);
+        } catch (Exception e) {
+            callbackContext.error("Error building frame: " + e.getMessage());
+        }
+    }
+
+    private void toggleFrame(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String id = args.optString(0);
+            if (id.isEmpty()) {
+                callbackContext.error("ID is required for toggling a frame.");
+                return;
+            }
+            if (!frameMap.containsKey(id)) {
+                callbackContext.error("Frame ID not found: " + id);
+                return;
+            }
+            GlyphFrame frame = frameMap.get(id); // Assuming non-null
+            // Assuming mGM is your GlyphManager instance and it has a toggle method
+            mGM.toggle(frame);
+            callbackContext.success("Frame toggled successfully for ID: " + id);
+        } catch (Exception e) {
+            callbackContext.error("Error toggling frame: " + e.getMessage());
+        }
+    }
+
+    private void setPeriod(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String id = args.getString(0);
+            int period = args.getInt(1);
+            GlyphBuilder builder = builderMap.get(id);
+            if (builder != null) {
+                builderMap.put(id, builder.buildPeriod(period));
+                callbackContext.success(true);
+            } else {
+                throw new Exception("Builder not found for ID: " + id);
+            }
+        } catch (Exception e) {
+            callbackContext.error("Error setting period: " + e.getMessage());
+        }
+    }
+
+    private void setCycles(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String id = args.getString(0);
+            int cycles = args.getInt(1);
+            GlyphBuilder builder = builderMap.get(id);
+            if (builder != null) {
+                builderMap.put(id, builder.buildCycles(cycles));
+                callbackContext.success(true);
+            } else {
+                throw new Exception("Builder not found for ID: " + id);
+            }
+        } catch (Exception e) {
+            callbackContext.error("Error setting cycles: " + e.getMessage());
+        }
+    }
+
+    private void setInterval(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String id = args.getString(0);
+            int interval = args.getInt(1);
+            GlyphBuilder builder = builderMap.get(id);
+            if (builder != null) {
+                builderMap.put(id, builder.buildInterval(interval));
+                callbackContext.success(true);
+            } else {
+                throw new Exception("Builder not found for ID: " + id);
+            }
+        } catch (Exception e) {
+            callbackContext.error("Error setting interval: " + e.getMessage());
+        }
+    }
+
+    private void animate(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String id = args.getString(0);
+            GlyphFrame frame = frameMap.get(id);
+            if (frame != null) {
+                mGM.animate(frame);
+                callbackContext.success(true);
+            } else {
+                throw new Exception("Frame not found for ID: " + id);
+            }
+        } catch (Exception e) {
+            callbackContext.error("Error animating frame: " + e.getMessage());
         }
     }
     
