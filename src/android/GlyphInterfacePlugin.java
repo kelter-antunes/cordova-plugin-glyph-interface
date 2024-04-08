@@ -287,10 +287,11 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
         try {
             String id = args.getString(0);
             int period = args.getInt(1);
-            GlyphBuilder builder = builderMap.get(id);
+            GlyphFrame.Builder builder = builderMap.get(id);
             if (builder != null) {
-                builderMap.put(id, builder.buildPeriod(period));
-                callbackContext.success(true);
+                GlyphFrame frame = builder.buildPeriod(period).build(); // Assuming build() method returns GlyphFrame
+                frameMap.put(id, frame);
+                callbackContext.success();
             } else {
                 throw new Exception("Builder not found for ID: " + id);
             }
@@ -303,7 +304,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
         try {
             String id = args.getString(0);
             int cycles = args.getInt(1);
-            GlyphBuilder builder = builderMap.get(id);
+            GlyphFrame.Builder builder = builderMap.get(id);
             if (builder != null) {
                 builderMap.put(id, builder.buildCycles(cycles));
                 callbackContext.success(true);
@@ -319,7 +320,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
         try {
             String id = args.getString(0);
             int interval = args.getInt(1);
-            GlyphBuilder builder = builderMap.get(id);
+            GlyphFrame.Builder builder = builderMap.get(id);
             if (builder != null) {
                 builderMap.put(id, builder.buildInterval(interval));
                 callbackContext.success(true);
@@ -337,7 +338,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             GlyphFrame frame = frameMap.get(id);
             if (frame != null) {
                 mGM.animate(frame);
-                callbackContext.success(true);
+                callbackContext.success();
             } else {
                 throw new Exception("Frame not found for ID: " + id);
             }
@@ -345,7 +346,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error animating frame: " + e.getMessage());
         }
     }
-
+    
 
     private void listFrameIds(CallbackContext callbackContext) {
         try {
