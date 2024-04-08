@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:rim="http://www.blackberry.com/ns/widgets"
+    xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-glyph-interface" version="0.0.1">
+    <name>cordova-plugin-glyph-interface</name>
+    <description>cordova-plugin-glyph-interface</description>
+    <license>MIT</license>
+    <keywords>cordova, plugin, glyph, nothing</keywords>
+
+    <engines>
+        <engine name="cordova" version=">=9.0.0" />
+        <engine name="cordova-android" version=">=9.0.0" />
+    </engines>
+
+    <js-module src="www/GlyphInterface.js" name="GlyphInterface">
+        <clobbers target="window.GlyphInterface" />
+    </js-module>
+
+    <preference name="API_KEY" default="YOUR_API_KEY"/>
+
+    <!-- Android platform -->
+    <platform name="android">
+        <!-- Add necessary permissions -->
+        <config-file parent="/manifest" target="AndroidManifest.xml">
+            <uses-permission android:name="com.nothing.ketchum.permission.ENABLE" />
+        </config-file>
+
+        <!-- Specify the API Key -->
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <meta-data android:name="NothingKey" android:value="$API_KEY" />
+        </config-file>
+
+        <!-- Add the plugin to the config.xml -->
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="GlyphInterface">
+                <param name="android-package" value="com.kelter.glyphinterface.GlyphInterface" />
+            </feature>
+        </config-file>
+
+        <!-- Specify the source file for the plugin -->
+        <source-file src="src/android/GlyphInterface.java" target-dir="src/com/kelter/glyphinterface" />
+
+        <!-- Add dependency on Glyph SDK -->
+        <lib-file src="src/android/libs/KetchumSDK_Community_20240307.jar"/>
+    </platform>
+</plugin>
