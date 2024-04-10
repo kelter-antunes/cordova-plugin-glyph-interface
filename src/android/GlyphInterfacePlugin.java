@@ -145,7 +145,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 listBuilderFrames(args, callbackContext);
                 return true;
             case "clearBuilderFrames":
-                clearBuilderFrames(args, callbackContext);
+                clearBuilderFrames(callbackContext);
                 return true;
             default:
                 callbackContext.error("Method not found");
