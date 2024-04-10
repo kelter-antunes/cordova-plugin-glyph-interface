@@ -32,6 +32,8 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
 
     private Map<String, GlyphFrame.Builder> builderMap = new HashMap<>();
     private Map<String, GlyphFrame> frameMap = new HashMap<>();
+    private Map<String, List<String>> builderFrameMap = new HashMap<>();
+
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -135,6 +137,12 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             case "clearFrames":
                 clearFrames(callbackContext);
                 return true;
+            case "listBuilderFrames":
+                listBuilderFrames(args, callbackContext);
+                return true;
+            case "clearBuilderFrames":
+                clearBuilderFrames(args, callbackContext);
+                return true;
             default:
                 callbackContext.error("Method not found");
                 return false;
@@ -183,18 +191,51 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 builder.buildChannel(channel);
             }
             GlyphFrame frame = builder.build(); // Build the frame
-            // Assuming you want to associate the frame with the builder
-            frameMap.put(builderId, frame);
-            callbackContext.success("Frame added to builder successfully");
+            
+            // Generate a UUID for the frame
+            String frameId = UUID.randomUUID().toString();
+            
+            // Store the frame in the frameMap with its generated UUID
+            frameMap.put(frameId, frame);
+            
+            // Store the information of the frames associated with the builder
+            List<String> builderFrames = builderFrameMap.getOrDefault(builderId, new ArrayList<>());
+            builderFrames.add(frameId);
+            builderFrameMap.put(builderId, builderFrames);
+            
+            callbackContext.success("Frame added to builder successfully with ID: " + frameId);
         } catch (JSONException e) {
             callbackContext.error("Error processing arguments");
         } catch (Exception e) {
             callbackContext.error("Error adding frame to builder: " + e.getMessage());
         }
     }
+    
 
-
-
+    private void listBuilderFrames(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String builderId = args.getString(0);
+            List<String> builderFrames = builderFrameMap.get(builderId);
+            if (builderFrames != null) {
+                JSONArray frameIdsArray = new JSONArray(builderFrames);
+                callbackContext.success(frameIdsArray);
+            } else {
+                callbackContext.error("No frames found for the given builder ID: " + builderId);
+            }
+        } catch (JSONException e) {
+            callbackContext.error("Error processing arguments");
+        }
+    }
+    
+    private void clearBuilderFrames(CallbackContext callbackContext) {
+        try {
+            builderMap.clear();
+            builderFrameMap.clear();
+            callbackContext.success("Builders cleared successfully");
+        } catch (Exception e) {
+            callbackContext.error("Error clearing builders: " + e.getMessage());
+        }
+    }
 
     private void buildGlyphFrame(JSONArray args, CallbackContext callbackContext) {
         try {

@@ -56,7 +56,7 @@ var GlyphInterface = {
         exec(success, error, 'GlyphInterfacePlugin', 'addFrameToBuilder', [builderId, channels]);
     },
     // Constants
-    Constants: {
+    CHANNELS: {
         Nothing_Phone_1: {
             A1: 0,
             B1: 1,
