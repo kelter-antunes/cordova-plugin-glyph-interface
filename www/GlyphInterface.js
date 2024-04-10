@@ -31,6 +31,9 @@ var GlyphInterface = {
     animate: function(options, success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'animate', [options]);
     },
+    displayProgress: function(options, success, error) {
+        exec(success, error, 'GlyphInterfacePlugin', 'displayProgress', [options]);
+    },
     getPlatformVersion: function(success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'getPlatformVersion', []);
     },

@@ -111,6 +111,9 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             case "animate":
                 animate(args, callbackContext);
                 return true;
+            case "displayProgress":
+                displayProgress(args, callbackContext);
+                return true;
             case "getPlatformVersion":
                 callbackContext.success("Android " + android.os.Build.VERSION.RELEASE);
                 return true;
@@ -361,6 +364,22 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             }
         } catch (Exception e) {
             callbackContext.error("Error animating frame: " + e.getMessage());
+        }
+    }
+
+    private void displayProgress(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String id = args.getString(0);
+            int progress = args.getInt(1);
+            GlyphFrame frame = frameMap.get(id);
+            if (frame != null) {
+                mGM.displayProgress(frame, progress);
+                callbackContext.success();
+            } else {
+                throw new Exception("Frame not found for ID: " + id);
+            }
+        } catch (Exception e) {
+            callbackContext.error("Error displaying progress on frame: " + e.getMessage());
         }
     }
     
