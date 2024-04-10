@@ -49,6 +49,12 @@ var GlyphInterface = {
     clearFrames: function(success, error) {
         exec(success, error, 'GlyphInterfacePlugin', 'clearFrames', []);
     },
+    createBuilder: function(success, error) {
+        exec(success, error, 'GlyphInterfacePlugin', 'createBuilder', []);
+    },
+    addFrameToBuilder: function(builderId, channels, success, error) {
+        exec(success, error, 'GlyphInterfacePlugin', 'addFrameToBuilder', [builderId, channels]);
+    },
     // Constants
     Constants: {
         Nothing_Phone_1: {

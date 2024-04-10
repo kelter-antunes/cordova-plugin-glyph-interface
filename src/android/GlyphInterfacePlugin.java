@@ -81,6 +81,12 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         switch (action) {
+            case "createBuilder":
+                createBuilder(callbackContext);
+                return true;
+            case "addFrameToBuilder":
+                addFrameToBuilder(args, callbackContext);
+                return true;
             case "builder":
                 buildGlyphFrame(args, callbackContext);
                 return true;
@@ -149,6 +155,45 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
         // Clear the builderMap
         builderMap.clear();
     }
+
+
+    private void createBuilder(CallbackContext callbackContext) {
+        try {
+            GlyphFrame.Builder builder = mGM.getGlyphFrameBuilder();
+            String builderId = UUID.randomUUID().toString(); // Generate a new unique ID
+            builderMap.put(builderId, builder);
+            callbackContext.success(builderId);
+        } catch (Exception e) {
+            callbackContext.error("Error creating builder: " + e.getMessage());
+        }
+    }
+    
+    private void addFrameToBuilder(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String builderId = args.getString(0);
+            if (!builderMap.containsKey(builderId)) {
+                callbackContext.error("Builder with ID not found");
+                return;
+            }
+            GlyphFrame.Builder builder = builderMap.get(builderId);
+            // Assuming channels are passed as an array of integers
+            JSONArray channelsArray = args.getJSONArray(1);
+            for (int i = 0; i < channelsArray.length(); i++) {
+                int channel = channelsArray.getInt(i);
+                builder.buildChannel(channel);
+            }
+            GlyphFrame frame = builder.build(); // Build the frame
+            // Assuming you want to associate the frame with the builder
+            frameMap.put(builderId, frame);
+            callbackContext.success("Frame added to builder successfully");
+        } catch (JSONException e) {
+            callbackContext.error("Error processing arguments");
+        } catch (Exception e) {
+            callbackContext.error("Error adding frame to builder: " + e.getMessage());
+        }
+    }
+
+
 
 
     private void buildGlyphFrame(JSONArray args, CallbackContext callbackContext) {
