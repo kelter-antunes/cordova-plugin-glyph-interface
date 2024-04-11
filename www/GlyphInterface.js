@@ -5,7 +5,7 @@ const GlyphInterface = {
     debugMode: false, //enable or disable logging
 
     // Method to toggle debug mode
-    toggleDebugMode: function() {
+    toggleDebugMode: function () {
         this.debugMode = !this.debugMode;
         console.log(`Debug mode is now ${this.debugMode ? 'ON' : 'OFF'}`);
     },
@@ -73,7 +73,7 @@ const GlyphInterface = {
         return Array.isArray(input) ? input : [input];
     },
     // Helper Function to turn on a channel array
-    turnOnChannels(channels) {
+    turnOnChannels(channels, success, error) {
         this.createBuilder(function (builderId) {
             if (this.debugMode) console.log('Builder created with ID:', builderId);
 
@@ -82,15 +82,23 @@ const GlyphInterface = {
 
                 this.toggle(frameId, function (successResponse) {
                     if (this.debugMode) console.log(successResponse);
-                }, function (error) {
-                    if (this.debugMode) console.error(error);
+                    // Call the success callback provided to turnOnChannels
+                    success(successResponse);
+                }, function (toggleError) {
+                    if (this.debugMode) console.error(toggleError);
+                    // Call the error callback provided to turnOnChannels
+                    error(toggleError);
                 });
 
-            }, function (error) {
-                if (this.debugMode) console.error('Error adding frames to builder:', error);
+            }, function (addFrameError) {
+                if (this.debugMode) console.error('Error adding frames to builder:', addFrameError);
+                // Call the error callback provided to turnOnChannels
+                error(addFrameError);
             });
-        }, function (error) {
-            if (this.debugMode) console.error('Error creating builder:', error);
+        }, function (createBuilderError) {
+            if (this.debugMode) console.error('Error creating builder:', createBuilderError);
+            // Call the error callback provided to turnOnChannels
+            error(createBuilderError);
         });
     },
     // Constants
