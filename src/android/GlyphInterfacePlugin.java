@@ -254,10 +254,10 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
 
             callbackContext.success(frameId);
         } catch (JSONException e) {
-            callbackContext.error("Error processing arguments");
+            callbackContext.error("Error processing arguments: " + e.getMessage());
         } catch (Exception e) {
             callbackContext.error("Error adding animated frame to builder: " + e.getMessage());
-        }
+        }        
     }
 
     private void listBuilderFrames(JSONArray args, CallbackContext callbackContext) {
