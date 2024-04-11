@@ -26,18 +26,15 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.ArrayList;
 
-
 public class GlyphInterfacePlugin extends CordovaPlugin {
 
     private GlyphManager mGM = null;
     private GlyphManager.Callback mCallback = null;
     private Context context;
 
-
     private Map<String, GlyphFrame.Builder> builderMap = new HashMap<>();
     private Map<String, GlyphFrame> frameMap = new HashMap<>();
     private Map<String, List<String>> builderFrameMap = new HashMap<>();
-
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -77,7 +74,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                     Log.e("GlyphIntegrationCordova", "Error closing Glyph session: " + e.getMessage());
                 }
             }
-            
+
         };
 
         mGM = GlyphManager.getInstance(context);
@@ -86,70 +83,85 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        switch (action) {
-            case "createBuilder":
-                createBuilder(callbackContext);
-                return true;
-            case "addFrameToBuilder":
-                addFrameToBuilder(args, callbackContext);
-                return true;
-            case "builder":
-                buildGlyphFrame(args, callbackContext);
-                return true;
-            case "turnOff":
-                turnOffAllGlyphs(callbackContext);
-                return true;
-            case "getPlatform":
-                getPlatform(callbackContext);
-                return true;
-            case "channel":
-                setChannel(args, callbackContext);
-                return true;
-            case "build":
-                buildFrame(args, callbackContext);
-                return true;
-            case "toggle":
-                toggleFrame(args, callbackContext);
-                return true;
-            case "setPeriod":
-                setPeriod(args, callbackContext);
-                return true;
-            case "setCycles":
-                setCycles(args, callbackContext);
-                return true;
-            case "setInterval":
-                setInterval(args, callbackContext);
-                return true;
-            case "animate":
-                animate(args, callbackContext);
-                return true;
-            case "displayProgress":
-                displayProgress(args, callbackContext);
-                return true;
-            case "getPlatformVersion":
-                callbackContext.success("Android " + android.os.Build.VERSION.RELEASE);
-                return true;
-            case "listBuilderIds":
-                listBuilderIds(callbackContext);
-                return true;
-            case "clearBuilders":
-                clearBuilders(callbackContext);
-                return true;
-            case "listFrameIds":
-                listFrameIds(callbackContext);
-                return true;
-            case "clearFrames":
-                clearFrames(callbackContext);
-                return true;
-            case "listBuilderFrames":
-                listBuilderFrames(args, callbackContext);
-                return true;
-            case "clearBuilderFrames":
-                clearBuilderFrames(callbackContext);
-                return true;
-            default:
-                callbackContext.error("Method not found");
-                return false;
+        if (callbackContext == null) {
+            Log.e("GlyphInterfacePlugin", "CallbackContext is null");
+            return false;
+        }
+
+        try {
+            switch (action) {
+                case "createBuilder":
+                    createBuilder(callbackContext);
+                    return true;
+                case "addFrameToBuilder":
+                    addFrameToBuilder(args, callbackContext);
+                    return true;
+                case "builder":
+                    buildGlyphFrame(args, callbackContext);
+                    return true;
+                case "turnOff":
+                    turnOffAllGlyphs(callbackContext);
+                    return true;
+                case "getPlatform":
+                    getPlatform(callbackContext);
+                    return true;
+                case "channel":
+                    setChannel(args, callbackContext);
+                    return true;
+                case "build":
+                    buildFrame(args, callbackContext);
+                    return true;
+                case "toggle":
+                    toggleFrame(args, callbackContext);
+                    return true;
+                case "setPeriod":
+                    setPeriod(args, callbackContext);
+                    return true;
+                case "setCycles":
+                    setCycles(args, callbackContext);
+                    return true;
+                case "setInterval":
+                    setInterval(args, callbackContext);
+                    return true;
+                case "animate":
+                    animate(args, callbackContext);
+                    return true;
+                case "displayProgress":
+                    displayProgress(args, callbackContext);
+                    return true;
+                case "getPlatformVersion":
+                    callbackContext.success("Android " + android.os.Build.VERSION.RELEASE);
+                    return true;
+                case "listBuilderIds":
+                    listBuilderIds(callbackContext);
+                    return true;
+                case "clearBuilders":
+                    clearBuilders(callbackContext);
+                    return true;
+                case "listFrameIds":
+                    listFrameIds(callbackContext);
+                    return true;
+                case "clearFrames":
+                    clearFrames(callbackContext);
+                    return true;
+                case "listBuilderFrames":
+                    listBuilderFrames(args, callbackContext);
+                    return true;
+                case "clearBuilderFrames":
+                    clearBuilderFrames(callbackContext);
+                    return true;
+                default:
+                    callbackContext.error("Method not found");
+                    return false;
+            }
+        } catch (JSONException e) {
+            callbackContext.error("Error processing arguments: " + e.getMessage());
+            Log.e("GlyphInterfacePlugin", "JSONException in execute: " + e.getMessage());
+            return false;
+        } catch (Exception e) {
+            callbackContext.error("Error executing action: " + e.getMessage());
+            Log.e("GlyphInterfacePlugin", "Exception in execute: " + e.getMessage());
+            return false;
         }
     }
 
@@ -168,7 +180,6 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
         builderMap.clear();
     }
 
-
     private void createBuilder(CallbackContext callbackContext) {
         try {
             GlyphFrame.Builder builder = mGM.getGlyphFrameBuilder();
@@ -179,7 +190,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error creating builder: " + e.getMessage());
         }
     }
-    
+
     private void addFrameToBuilder(JSONArray args, CallbackContext callbackContext) {
         try {
             String builderId = args.getString(0);
@@ -195,18 +206,18 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 builder.buildChannel(channel);
             }
             GlyphFrame frame = builder.build(); // Build the frame
-            
+
             // Generate a UUID for the frame
             String frameId = UUID.randomUUID().toString();
-            
+
             // Store the frame in the frameMap with its generated UUID
             frameMap.put(frameId, frame);
-            
+
             // Store the information of the frames associated with the builder
             List<String> builderFrames = builderFrameMap.getOrDefault(builderId, new ArrayList<>());
             builderFrames.add(frameId);
             builderFrameMap.put(builderId, builderFrames);
-            
+
             callbackContext.success("Frame added to builder successfully with ID: " + frameId);
         } catch (JSONException e) {
             callbackContext.error("Error processing arguments");
@@ -214,7 +225,6 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error adding frame to builder: " + e.getMessage());
         }
     }
-    
 
     private void listBuilderFrames(JSONArray args, CallbackContext callbackContext) {
         try {
@@ -230,7 +240,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error processing arguments");
         }
     }
-    
+
     private void clearBuilderFrames(CallbackContext callbackContext) {
         try {
             builderMap.clear();
@@ -261,12 +271,13 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 builderMap.put(builderId, builder); // Store the new builder with the generated/found ID
             }
 
-            // Configure the builder based on the parameters. This part might need adjustment
+            // Configure the builder based on the parameters. This part might need
+            // adjustment
             // based on your actual builder methods and capabilities
             builder.buildPeriod(period)
-                .buildCycles(cycles)
-                .buildInterval(interval)
-                .buildChannel(channel); // Adjust this part based on actual implementation
+                    .buildCycles(cycles)
+                    .buildInterval(interval)
+                    .buildChannel(channel); // Adjust this part based on actual implementation
 
             // Construct the JSON object to return
             JSONObject builderDetails = new JSONObject();
@@ -298,8 +309,6 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error building GlyphFrame: " + e.getMessage());
         }
     }
-
-
 
     private void getPlatform(CallbackContext callbackContext) {
         if (Common.is20111()) {
@@ -352,7 +361,6 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error clearing builders: " + e.getMessage());
         }
     }
-
 
     private void buildFrame(JSONArray args, CallbackContext callbackContext) {
         try {
@@ -472,7 +480,6 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error displaying progress on frame: " + e.getMessage());
         }
     }
-    
 
     private void listFrameIds(CallbackContext callbackContext) {
         try {
@@ -482,7 +489,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error listing frame IDs: " + e.getMessage());
         }
     }
-    
+
     // Method to clear all entries in frameMap
     private void clearFrames(CallbackContext callbackContext) {
         try {
@@ -493,5 +500,4 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
         }
     }
 
-    
 }
