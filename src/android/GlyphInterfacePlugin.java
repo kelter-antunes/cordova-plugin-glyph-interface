@@ -82,79 +82,71 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
     }
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
-        try {
-            switch (action) {
-                case "createBuilder":
-                    createBuilder(callbackContext);
-                    return true;
-                case "addFrameToBuilder":
-                    addFrameToBuilder(args, callbackContext);
-                    return true;
-                case "builder":
-                    buildGlyphFrame(args, callbackContext);
-                    return true;
-                case "turnOff":
-                    turnOffAllGlyphs(callbackContext);
-                    return true;
-                case "getPlatform":
-                    getPlatform(callbackContext);
-                    return true;
-                case "channel":
-                    setChannel(args, callbackContext);
-                    return true;
-                case "build":
-                    buildFrame(args, callbackContext);
-                    return true;
-                case "toggle":
-                    toggleFrame(args, callbackContext);
-                    return true;
-                case "setPeriod":
-                    setPeriod(args, callbackContext);
-                    return true;
-                case "setCycles":
-                    setCycles(args, callbackContext);
-                    return true;
-                case "setInterval":
-                    setInterval(args, callbackContext);
-                    return true;
-                case "animate":
-                    animate(args, callbackContext);
-                    return true;
-                case "displayProgress":
-                    displayProgress(args, callbackContext);
-                    return true;
-                case "getPlatformVersion":
-                    callbackContext.success("Android " + android.os.Build.VERSION.RELEASE);
-                    return true;
-                case "listBuilderIds":
-                    listBuilderIds(callbackContext);
-                    return true;
-                case "clearBuilders":
-                    clearBuilders(callbackContext);
-                    return true;
-                case "listFrameIds":
-                    listFrameIds(callbackContext);
-                    return true;
-                case "clearFrames":
-                    clearFrames(callbackContext);
-                    return true;
-                case "listBuilderFrames":
-                    listBuilderFrames(args, callbackContext);
-                    return true;
-                case "clearBuilderFrames":
-                    clearBuilderFrames(callbackContext);
-                    return true;
-                default:
-                    callbackContext.error("Method not found");
-                    return false;
-            }
-        } catch (JSONException e) {
-            callbackContext.error("Error processing arguments: " + e.getMessage());
-            return false;
-        } catch (Exception e) {
-            callbackContext.error("Error executing action: " + e.getMessage());
-            return false;
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        switch (action) {
+            case "createBuilder":
+                createBuilder(callbackContext);
+                return true;
+            case "addFrameToBuilder":
+                addFrameToBuilder(args, callbackContext);
+                return true;
+            case "builder":
+                buildGlyphFrame(args, callbackContext);
+                return true;
+            case "turnOff":
+                turnOffAllGlyphs(callbackContext);
+                return true;
+            case "getPlatform":
+                getPlatform(callbackContext);
+                return true;
+            case "channel":
+                setChannel(args, callbackContext);
+                return true;
+            case "build":
+                buildFrame(args, callbackContext);
+                return true;
+            case "toggle":
+                toggleFrame(args, callbackContext);
+                return true;
+            case "setPeriod":
+                setPeriod(args, callbackContext);
+                return true;
+            case "setCycles":
+                setCycles(args, callbackContext);
+                return true;
+            case "setInterval":
+                setInterval(args, callbackContext);
+                return true;
+            case "animate":
+                animate(args, callbackContext);
+                return true;
+            case "displayProgress":
+                displayProgress(args, callbackContext);
+                return true;
+            case "getPlatformVersion":
+                callbackContext.success("Android " + android.os.Build.VERSION.RELEASE);
+                return true;
+            case "listBuilderIds":
+                listBuilderIds(callbackContext);
+                return true;
+            case "clearBuilders":
+                clearBuilders(callbackContext);
+                return true;
+            case "listFrameIds":
+                listFrameIds(callbackContext);
+                return true;
+            case "clearFrames":
+                clearFrames(callbackContext);
+                return true;
+            case "listBuilderFrames":
+                listBuilderFrames(args, callbackContext);
+                return true;
+            case "clearBuilderFrames":
+                clearBuilderFrames(callbackContext);
+                return true;
+            default:
+                callbackContext.error("Method not found");
+                return false;
         }
     }
 
