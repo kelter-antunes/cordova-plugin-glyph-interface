@@ -1,59 +1,62 @@
-var exec = require('cordova/exec');
+const exec = require('cordova/exec');
 
-var GlyphInterface = {
-    builder: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'builder', [options]);
+const GlyphInterface = {
+    execPlugin: (method, options = [], success, error) => {
+        exec(success, error, 'GlyphInterfacePlugin', method, options);
     },
-    turnOff: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'turnOff', []);
+    builder: function(options, success, error) {
+        this.execPlugin('builder', [options], success, error);
+    },
+    turnOff: function(success, error) {
+        this.execPlugin('turnOff', [], success, error);
     },
     getPlatform: function(success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'getPlatform', []);
+        this.execPlugin('getPlatform', [], success, error);
     },
     channel: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'channel', [options]);
+        this.execPlugin('channel', [options], success, error);
     },
     build: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'build', [options]);
+        this.execPlugin('build', [options], success, error);
     },
     toggle: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'toggle', [options]);
+        this.execPlugin('toggle', [options], success, error);
     },
     setPeriod: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'setPeriod', [options]);
+        this.execPlugin('setPeriod', [options], success, error);
     },
     setCycles: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'setCycles', [options]);
+        this.execPlugin('setCycles', [options], success, error);
     },
     setInterval: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'setInterval', [options]);
+        this.execPlugin('setInterval', [options], success, error);
     },
     animate: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'animate', [options]);
+        this.execPlugin('animate', [options], success, error);
     },
     displayProgress: function(options, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'displayProgress', [options]);
+        this.execPlugin('displayProgress', [options], success, error);
     },
     getPlatformVersion: function(success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'getPlatformVersion', []);
+        this.execPlugin('getPlatformVersion', [], success, error);
     },
     listBuilderIds: function(success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'listBuilderIds', []);
+        this.execPlugin('listBuilderIds', [], success, error);
     },
     clearBuilders: function(success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'clearBuilders', []);
+        this.execPlugin('clearBuilders', [], success, error);
     },
     listFrameIds: function(success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'listFrameIds', []);
+        this.execPlugin('listFrameIds', [], success, error);
     },
     clearFrames: function(success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'clearFrames', []);
+        this.execPlugin('clearFrames', [], success, error);
     },
     createBuilder: function(success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'createBuilder', []);
+        this.execPlugin('createBuilder', [], success, error);
     },
     addFrameToBuilder: function(builderId, channels, success, error) {
-        exec(success, error, 'GlyphInterfacePlugin', 'addFrameToBuilder', [builderId, channels]);
+        this.execPlugin('addFrameToBuilder', [builderId, channels], success, error);
     },
     // Constants
     CHANNELS: {
