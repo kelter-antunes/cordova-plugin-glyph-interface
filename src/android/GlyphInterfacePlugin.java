@@ -351,7 +351,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
         try {
             String id = args.optString(0);
             if (id.isEmpty()) {
-                callbackContext.error("ID is required for building a frame.");
+                callbackContext.error("Builder ID is required for building a frame.");
                 return;
             }
             if (!builderMap.containsKey(id)) {
@@ -363,6 +363,44 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.success("Frame built successfully for ID: " + id);
         } catch (Exception e) {
             callbackContext.error("Error building frame: " + e.getMessage());
+        }
+    }
+
+    private void buildFrameAnimated(JSONArray args, CallbackContext callbackContext) {
+        try {
+            // Assuming the first argument is the builder ID
+            String builderId = args.getString(0);
+            if (!builderMap.containsKey(builderId)) {
+                callbackContext.error("Builder with ID not found");
+                return;
+            }
+
+            // Extract other parameters from the JSONArray
+            int period = args.getInt(1);
+            int cycles = args.getInt(2);
+            int interval = args.getInt(3);
+            int channel = args.getInt(4);
+            int lightValue = args.getInt(5);
+
+            // Create a GlyphFrame using the Builder with animation parameters
+            GlyphFrame frame = new GlyphFrame.Builder()
+                    .buildPeriod(period)
+                    .buildCycles(cycles)
+                    .buildInterval(interval)
+                    .buildChannel(channel, lightValue)
+                    .build();
+
+            // Generate a UUID for the frame
+            String frameId = UUID.randomUUID().toString();
+
+            // Store the frame in the frameMap with its generated UUID
+            frameMap.put(frameId, frame);
+
+            callbackContext.success(frameId);
+        } catch (JSONException e) {
+            callbackContext.error("Error processing arguments");
+        } catch (Exception e) {
+            callbackContext.error("Error building animated frame: " + e.getMessage());
         }
     }
 
