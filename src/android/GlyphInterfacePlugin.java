@@ -203,7 +203,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             builderFrames.add(frameId);
             builderFrameMap.put(builderId, builderFrames);
 
-            callbackContext.success("Frame added to builder successfully with ID: " + frameId);
+            callbackContext.success(frameId);
         } catch (JSONException e) {
             callbackContext.error("Error processing arguments");
         } catch (Exception e) {
