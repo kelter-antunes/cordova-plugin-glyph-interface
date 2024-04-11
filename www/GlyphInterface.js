@@ -1,62 +1,97 @@
 const exec = require('cordova/exec');
 
 const GlyphInterface = {
+
+    debugMode: false, //enable or disable logging
+
+    // Method to toggle debug mode
+    toggleDebugMode: function() {
+        this.debugMode = !this.debugMode;
+        console.log(`Debug mode is now ${this.debugMode ? 'ON' : 'OFF'}`);
+    },
+
     execPlugin: (method, options = [], success, error) => {
+        if (this.debugMode) console.log(`Executing plugin method: ${method}`);
         exec(success, error, 'GlyphInterfacePlugin', method, options);
     },
-    builder: function(options, success, error) {
+    builder: function (options, success, error) {
         this.execPlugin('builder', [options], success, error);
     },
-    turnOff: function(success, error) {
+    turnOff: function (success, error) {
         this.execPlugin('turnOff', [], success, error);
     },
-    getPlatform: function(success, error) {
+    getPlatform: function (success, error) {
         this.execPlugin('getPlatform', [], success, error);
     },
-    channel: function(options, success, error) {
+    channel: function (options, success, error) {
         this.execPlugin('channel', [options], success, error);
     },
-    build: function(options, success, error) {
+    build: function (options, success, error) {
         this.execPlugin('build', [options], success, error);
     },
-    toggle: function(options, success, error) {
+    toggle: function (options, success, error) {
         this.execPlugin('toggle', [options], success, error);
     },
-    setPeriod: function(options, success, error) {
+    setPeriod: function (options, success, error) {
         this.execPlugin('setPeriod', [options], success, error);
     },
-    setCycles: function(options, success, error) {
+    setCycles: function (options, success, error) {
         this.execPlugin('setCycles', [options], success, error);
     },
-    setInterval: function(options, success, error) {
+    setInterval: function (options, success, error) {
         this.execPlugin('setInterval', [options], success, error);
     },
-    animate: function(options, success, error) {
+    animate: function (options, success, error) {
         this.execPlugin('animate', [options], success, error);
     },
-    displayProgress: function(options, success, error) {
+    displayProgress: function (options, success, error) {
         this.execPlugin('displayProgress', [options], success, error);
     },
-    getPlatformVersion: function(success, error) {
+    getPlatformVersion: function (success, error) {
         this.execPlugin('getPlatformVersion', [], success, error);
     },
-    listBuilderIds: function(success, error) {
+    listBuilderIds: function (success, error) {
         this.execPlugin('listBuilderIds', [], success, error);
     },
-    clearBuilders: function(success, error) {
+    clearBuilders: function (success, error) {
         this.execPlugin('clearBuilders', [], success, error);
     },
-    listFrameIds: function(success, error) {
+    listFrameIds: function (success, error) {
         this.execPlugin('listFrameIds', [], success, error);
     },
-    clearFrames: function(success, error) {
+    clearFrames: function (success, error) {
         this.execPlugin('clearFrames', [], success, error);
     },
-    createBuilder: function(success, error) {
+    createBuilder: function (success, error) {
         this.execPlugin('createBuilder', [], success, error);
     },
-    addFrameToBuilder: function(builderId, channels, success, error) {
+    addFrameToBuilder: function (builderId, channels, success, error) {
         this.execPlugin('addFrameToBuilder', [builderId, channels], success, error);
+    },
+    // Function to ensure the input is an array
+    ensureArray(input) {
+        return Array.isArray(input) ? input : [input];
+    },
+    // Helper Function to turn on a channel array
+    turnOnChannels(channels) {
+        this.createBuilder(function (builderId) {
+            if (this.debugMode) console.log('Builder created with ID:', builderId);
+
+            this.addFrameToBuilder(builderId, channels, function (frameId) {
+                if (this.debugMode) console.log('Frame added to builder successfully with ID:', frameId);
+
+                this.toggle(frameId, function (successResponse) {
+                    if (this.debugMode) console.log(successResponse);
+                }, function (error) {
+                    if (this.debugMode) console.error(error);
+                });
+
+            }, function (error) {
+                if (this.debugMode) console.error('Error adding frames to builder:', error);
+            });
+        }, function (error) {
+            if (this.debugMode) console.error('Error creating builder:', error);
+        });
     },
     // Constants
     CHANNELS: {
@@ -85,7 +120,7 @@ const GlyphInterface = {
             A2: 1,
             B: 2,
             B1: 2,
-            C: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20,21,22,23],
+            C: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
             C1: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
             C1_1: 3,
             C1_2: 4,
