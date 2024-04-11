@@ -90,6 +90,9 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             case "addFrameToBuilder":
                 addFrameToBuilder(args, callbackContext);
                 return true;
+            case "addFrameAnimatedToBuilder":
+                addFrameAnimatedToBuilder(args, callbackContext);
+                return true;
             case "builder":
                 buildGlyphFrame(args, callbackContext);
                 return true;
@@ -208,6 +211,52 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error processing arguments");
         } catch (Exception e) {
             callbackContext.error("Error adding frame to builder: " + e.getMessage());
+        }
+    }
+
+    private void addFrameAnimatedToBuilder(JSONArray args, CallbackContext callbackContext) {
+        try {
+            String builderId = args.getString(0);
+            if (!builderMap.containsKey(builderId)) {
+                callbackContext.error("Builder with ID not found");
+                return;
+            }
+
+            // Extracting other parameters from the JSONArray
+            int period = args.getInt(1);
+            int cycles = args.getInt(2);
+            int interval = args.getInt(3);
+            int channel = args.getInt(4);
+            int lightValue = args.getInt(5);
+
+            // Retrieving or creating the builder
+            GlyphFrame.Builder builder = builderMap.getOrDefault(builderId, mGM.getGlyphFrameBuilder());
+
+            // Configuring the builder with animation parameters
+            builder.buildPeriod(period)
+                    .buildCycles(cycles)
+                    .buildInterval(interval)
+                    .buildChannel(channel, lightValue);
+
+            // Building the frame
+            GlyphFrame frame = builder.build();
+
+            // Generating a UUID for the frame
+            String frameId = UUID.randomUUID().toString();
+
+            // Storing the frame in the frameMap with its generated UUID
+            frameMap.put(frameId, frame);
+
+            // Storing the information of the frames associated with the builder
+            List<String> builderFrames = builderFrameMap.getOrDefault(builderId, new ArrayList<>());
+            builderFrames.add(frameId);
+            builderFrameMap.put(builderId, builderFrames);
+
+            callbackContext.success(frameId);
+        } catch (JSONException e) {
+            callbackContext.error("Error processing arguments");
+        } catch (Exception e) {
+            callbackContext.error("Error adding animated frame to builder: " + e.getMessage());
         }
     }
 
@@ -368,32 +417,39 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
 
     private void buildFrameAnimated(JSONArray args, CallbackContext callbackContext) {
         try {
-            // Assuming the first argument is the builder ID
-            String builderId = args.getString(0);
-            if (!builderMap.containsKey(builderId)) {
-                callbackContext.error("Builder with ID not found");
+            String id = args.optString(0);
+            if (id.isEmpty()) {
+                callbackContext.error("Builder ID is required for building a frame.");
+                return;
+            }
+            if (!builderMap.containsKey(id)) {
+                callbackContext.error("Builder ID not found: " + id);
                 return;
             }
 
-            // Extract other parameters from the JSONArray
+            // Extracting other parameters from the JSONArray
             int period = args.getInt(1);
             int cycles = args.getInt(2);
             int interval = args.getInt(3);
             int channel = args.getInt(4);
             int lightValue = args.getInt(5);
 
-            // Create a GlyphFrame using the Builder with animation parameters
-            GlyphFrame frame = new GlyphFrame.Builder()
-                    .buildPeriod(period)
+            // Reusing the existing builder or creating a new one if not found
+            GlyphFrame.Builder builder = builderMap.getOrDefault(id, mGM.getGlyphFrameBuilder());
+
+            // Configuring the builder with animation parameters
+            builder.buildPeriod(period)
                     .buildCycles(cycles)
                     .buildInterval(interval)
-                    .buildChannel(channel, lightValue)
-                    .build();
+                    .buildChannel(channel, lightValue);
 
-            // Generate a UUID for the frame
+            // Building the frame
+            GlyphFrame frame = builder.build();
+
+            // Generating a UUID for the frame
             String frameId = UUID.randomUUID().toString();
 
-            // Store the frame in the frameMap with its generated UUID
+            // Storing the frame in the frameMap with its generated UUID
             frameMap.put(frameId, frame);
 
             callbackContext.success(frameId);
