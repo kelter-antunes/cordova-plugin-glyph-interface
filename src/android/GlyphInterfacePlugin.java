@@ -222,12 +222,14 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 return;
             }
 
-            // Extracting other parameters from the JSONArray
-            int period = args.getInt(1);
-            int cycles = args.getInt(2);
-            int interval = args.getInt(3);
-            int channel = args.getInt(4);
-            int lightValue = args.getInt(5);
+            JSONObject options = new JSONObject(args.getString(1));
+    
+            // Now you can access the properties directly
+            int period = options.getInt("period");
+            int cycles = options.getInt("cycles");
+            int interval = options.getInt("interval");
+            int channel = options.getInt("channel");
+            int lightValue = options.getInt("lightValue");
 
             // Retrieving or creating the builder
             GlyphFrame.Builder builder = builderMap.getOrDefault(builderId, mGM.getGlyphFrameBuilder());
@@ -257,7 +259,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error processing arguments: " + e.getMessage());
         } catch (Exception e) {
             callbackContext.error("Error adding animated frame to builder: " + e.getMessage());
-        }        
+        }
     }
 
     private void listBuilderFrames(JSONArray args, CallbackContext callbackContext) {
