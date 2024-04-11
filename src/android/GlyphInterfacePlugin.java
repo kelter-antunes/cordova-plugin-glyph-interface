@@ -82,12 +82,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
     }
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (callbackContext == null) {
-            Log.e("GlyphInterfacePlugin", "CallbackContext is null");
-            return false;
-        }
-
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         try {
             switch (action) {
                 case "createBuilder":
@@ -156,11 +151,9 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             }
         } catch (JSONException e) {
             callbackContext.error("Error processing arguments: " + e.getMessage());
-            Log.e("GlyphInterfacePlugin", "JSONException in execute: " + e.getMessage());
             return false;
         } catch (Exception e) {
             callbackContext.error("Error executing action: " + e.getMessage());
-            Log.e("GlyphInterfacePlugin", "Exception in execute: " + e.getMessage());
             return false;
         }
     }
