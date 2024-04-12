@@ -222,23 +222,25 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 return;
             }
 
-            JSONObject options = new JSONObject(args.getString(1));
-    
-            // Now you can access the properties directly
+            JSONObject options = args.getJSONObject(1);
             int period = options.getInt("period");
             int cycles = options.getInt("cycles");
             int interval = options.getInt("interval");
-            int channel = options.getInt("channel");
-            int lightValue = options.getInt("lightValue");
+            JSONArray channelsArray = options.getJSONArray("channels");
 
-            // Retrieving or creating the builder
-            GlyphFrame.Builder builder = builderMap.getOrDefault(builderId, mGM.getGlyphFrameBuilder());
+            GlyphFrame.Builder builder = builderMap.get(builderId);
+
+            // Loop through the channels array and add each channel to the builder
+            for (int i = 0; i < channelsArray.length(); i++) {
+                int channel = channelsArray.getInt(i);
+                int lightValue = options.getInt("lightValue"); // Assuming lightValue is common for all channels
+                builder.buildChannel(channel, lightValue);
+            }
 
             // Configuring the builder with animation parameters
             builder.buildPeriod(period)
                     .buildCycles(cycles)
-                    .buildInterval(interval)
-                    .buildChannel(channel, lightValue);
+                    .buildInterval(interval);
 
             // Building the frame
             GlyphFrame frame = builder.build();
