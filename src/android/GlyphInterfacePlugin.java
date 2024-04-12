@@ -91,7 +91,9 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 addFrameToBuilder(args, callbackContext);
                 return true;
             case "addFrameAnimatedToBuilder":
-                addFrameAnimatedToBuilder(args, callbackContext);
+                String builderId = args.getString(0);
+                JSONObject options = args.getJSONObject(1);
+                addFrameAnimatedToBuilder(builderId, options, callbackContext);
                 return true;
             case "builder":
                 buildGlyphFrame(args, callbackContext);
@@ -214,20 +216,11 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
         }
     }
 
-    private void addFrameAnimatedToBuilder(JSONArray args, CallbackContext callbackContext) {
+    private void addFrameAnimatedToBuilder(String builderId, JSONObject options, CallbackContext callbackContext) {
         try {
-            String builderId = args.getString(0);
             if (!builderMap.containsKey(builderId)) {
                 callbackContext.error("Builder with ID not found");
                 return;
-            }
-    
-            // Attempt to parse the second argument as a JSONObject
-            JSONObject options;
-            if (args.get(1) instanceof String) {
-                options = new JSONObject((String) args.get(1));
-            } else {
-                options = args.getJSONObject(1);
             }
     
             int period = options.getInt("period");
