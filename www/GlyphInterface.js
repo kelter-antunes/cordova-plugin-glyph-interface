@@ -70,7 +70,7 @@ const GlyphInterface = {
     },
     addFrameAnimatedToBuilder: function (builderId, options, success, error) {
         this.execPlugin('addFrameAnimatedToBuilder', [builderId, options], success, error);
-    },    
+    },   
     clearBuilderFrames: function (success, error) {
         this.execPlugin('clearBuilderFrames', [], success, error);
     },
