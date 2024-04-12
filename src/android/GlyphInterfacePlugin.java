@@ -221,41 +221,48 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 callbackContext.error("Builder with ID not found");
                 return;
             }
-
-            JSONObject options = args.getJSONObject(1);
+    
+            // Attempt to parse the second argument as a JSONObject
+            JSONObject options;
+            if (args.get(1) instanceof String) {
+                options = new JSONObject((String) args.get(1));
+            } else {
+                options = args.getJSONObject(1);
+            }
+    
             int period = options.getInt("period");
             int cycles = options.getInt("cycles");
             int interval = options.getInt("interval");
             JSONArray channelsArray = options.getJSONArray("channels");
-
+    
             GlyphFrame.Builder builder = builderMap.get(builderId);
-
+    
             // Loop through the channels array and add each channel to the builder
             for (int i = 0; i < channelsArray.length(); i++) {
                 int channel = channelsArray.getInt(i);
                 int lightValue = options.getInt("lightValue"); // Assuming lightValue is common for all channels
                 builder.buildChannel(channel, lightValue);
             }
-
+    
             // Configuring the builder with animation parameters
             builder.buildPeriod(period)
                     .buildCycles(cycles)
                     .buildInterval(interval);
-
+    
             // Building the frame
             GlyphFrame frame = builder.build();
-
+    
             // Generating a UUID for the frame
             String frameId = UUID.randomUUID().toString();
-
+    
             // Storing the frame in the frameMap with its generated UUID
             frameMap.put(frameId, frame);
-
+    
             // Storing the information of the frames associated with the builder
             List<String> builderFrames = builderFrameMap.getOrDefault(builderId, new ArrayList<>());
             builderFrames.add(frameId);
             builderFrameMap.put(builderId, builderFrames);
-
+    
             callbackContext.success(frameId);
         } catch (JSONException e) {
             callbackContext.error("Error processing arguments: " + e.getMessage());
@@ -263,6 +270,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error adding animated frame to builder: " + e.getMessage());
         }
     }
+    
 
     private void listBuilderFrames(JSONArray args, CallbackContext callbackContext) {
         try {
