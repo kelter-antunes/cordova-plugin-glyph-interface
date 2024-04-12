@@ -222,10 +222,8 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 callbackContext.error("Builder with ID not found");
                 return;
             }
-    
-            int period = options.getInt("period");
-            int cycles = options.getInt("cycles");
-            int interval = options.getInt("interval");
+            
+            // Extract channels array from options
             JSONArray channelsArray = options.getJSONArray("channels");
     
             GlyphFrame.Builder builder = builderMap.get(builderId);
@@ -236,6 +234,11 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
                 int lightValue = options.getInt("lightValue"); // Assuming lightValue is common for all channels
                 builder.buildChannel(channel, lightValue);
             }
+    
+            // Extract other animation parameters from options
+            int period = options.getInt("period");
+            int cycles = options.getInt("cycles");
+            int interval = options.getInt("interval");
     
             // Configuring the builder with animation parameters
             builder.buildPeriod(period)
@@ -263,6 +266,7 @@ public class GlyphInterfacePlugin extends CordovaPlugin {
             callbackContext.error("Error adding animated frame to builder: " + e.getMessage());
         }
     }
+    
     
 
     private void listBuilderFrames(JSONArray args, CallbackContext callbackContext) {
